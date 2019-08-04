@@ -1,8 +1,7 @@
-def define_search_criteria(vk):
-    user_input_user = input('Введите id или имя пользователя в ВК для поиска пары: ')
+def define_search_criteria(vk, user):
     user_input_age_from = input('Введите нижнюю границу возраста для подбора пары: ')
     user_input_age_to = input('Введите верхнюю границу возраста для подбора пары: ')
-    response_info = vk.users.get(user_ids=user_input_user, fields='sex,city')
+    response_info = vk.users.get(user_ids=user, fields='sex,city')
     checked_info = check_user_data(vk, response_info)
 
     match_info = dict(
