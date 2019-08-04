@@ -2,8 +2,6 @@ import vk_api
 import json
 from Search_criteria import define_search_criteria
 import Work_with_DataBase
-import sqlalchemy.exc
-
 
 def search_for_pretenders(vk, info):
     response_pretender = vk.users.search(
@@ -41,7 +39,7 @@ def main():
     # user_input_login = input('Для доступа к программе введите свой логин и пароль.\nЛогин (или номер телефона: ')
     # user_input_password = input('Пароль: ')
     scope = 'photos,groups'
-    vk_session = vk_api.VkApi(login='89090680016', password='Cvoboda21', api_version='5.101', scope=scope)
+    vk_session = vk_api.VkApi(login='89090680016', password='', api_version='5.101', scope=scope)
     # vk_session = vk.api.VkApi(login=user_input_login, password=user_input_password, api_version='5.101', scope=scope)
 
     try:
@@ -57,12 +55,7 @@ def main():
 
     with open('ten_pretenders.json', 'w') as file:
         json.dump(get_top_3_avatars(vk, pretender_list), file, ensure_ascii=False, indent=2)
-        Work_with_DataBase.create_models(user_input_user)
-        Work_with_DataBase.create_all()
-        try:
-            Work_with_DataBase.add_all_pretenders()
-        except sqlalchemy.exc.IntegrityError as e:
-                print('Данные уже записаны')
+    Work_with_DataBase.create_models(user_input_user)
 
     while True:
         user_input_next_step = input('Введите n, чтобы продолжить поиск или q, чтобы выйти из программы: ')
@@ -70,12 +63,8 @@ def main():
             if pretender_list:
                 with open('ten_pretenders.json', 'w') as file:
                     json.dump(get_top_3_avatars(vk, pretender_list), file, ensure_ascii=False, indent=2)
-                    Work_with_DataBase.create_models(user_input_user)
-                    Work_with_DataBase.create_all()
-                    try:
-                        Work_with_DataBase.add_all_pretenders()
-                    except sqlalchemy.exc.IntegrityError as e:
-                        print('Данные уже записны')
+                Work_with_DataBase.create_models(user_input_user)
+
             else:
                 print('Подходящих людей больше не найдено')
         if user_input_next_step == 'q':

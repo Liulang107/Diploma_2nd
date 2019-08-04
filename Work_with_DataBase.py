@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Date
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
+import sqlalchemy.exc
 import json
 
 
@@ -16,32 +17,40 @@ Base = declarative_base()
 # engine = create_engine(auth_info_bd())
 engine = create_engine('postgresql://admin@localhost/VKinder')
 Session = sessionmaker(bind=engine)
+session = Session()
+
 
 def create_models(user):
     class VKinder(Base):
+
         __tablename__ = f'{user}'
 
         id = Column(Integer, primary_key=True)
         id_name = Column(Integer, nullable=False, unique=True)
         photos = Column(JSONB, server_default='[]', default=list, nullable=False)
 
-session = Session()
+    def create_all():
+        Base.metadata.create_all(engine)
 
-def create_all():
-    Base.metadata.create_all(engine)
+    create_all()
 
-def get_10_pretenders():
-    with open('ten_pretenders.json', 'r') as out_info:
-        ten_pretenders = json.load(out_info)
-        return ten_pretenders
+    def get_10_pretenders():
+        with open('ten_pretenders.json', 'r') as out_info:
+            ten_pretenders = json.load(out_info)
+            return ten_pretenders
 
-def add_pretender(**kwargs):
-    pretender = VKinder(**kwargs)
-    session.add(pretender)
-    session.commit()
+    def add_pretender(**kwargs):
+        pretender = VKinder(**kwargs)
+        session.add(pretender)
+        session.commit()
 
-def add_all_pretenders():
-    ten_pretenders = get_10_pretenders()
-    for item in ten_pretenders:
-        add_pretender(id_name=item['id'],
-                   photos=item['photos'])
+    def add_all_pretenders():
+        ten_pretenders = get_10_pretenders()
+        for item in ten_pretenders:
+            add_pretender(id_name=item['id'],
+                       photos=item['photos'])
+
+    try:
+        add_all_pretenders()
+    except sqlalchemy.exc.IntegrityError as e:
+        print('Данные уже записаны')
