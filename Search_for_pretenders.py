@@ -3,6 +3,7 @@ import json
 from Search_criteria import define_search_criteria
 import Work_with_DataBase
 
+
 def search_for_pretenders(vk, info):
     response_pretender = vk.users.search(
         fields='bdate,sex,city',
@@ -16,7 +17,7 @@ def search_for_pretenders(vk, info):
 def remove_private_profiles(info):
     cleaned_info = []
     for pretender in info['items']:
-        if pretender['is_closed']==False:
+        if not pretender['is_closed']:
             cleaned_info.append(pretender)
     return cleaned_info
 
@@ -36,11 +37,10 @@ def get_top_3_avatars(vk, info):
 
 
 def main():
-    # user_input_login = input('Для доступа к программе введите свой логин и пароль.\nЛогин (или номер телефона: ')
-    # user_input_password = input('Пароль: ')
+    user_input_login = input('Для доступа к программе введите свой логин и пароль.\nЛогин (или номер телефона: ')
+    user_input_password = input('Пароль: ')
     scope = 'photos,groups'
-    vk_session = vk_api.VkApi(login='89090680016', password='', api_version='5.101', scope=scope)
-    # vk_session = vk.api.VkApi(login=user_input_login, password=user_input_password, api_version='5.101', scope=scope)
+    vk_session = vk.api.VkApi(login=user_input_login, password=user_input_password, api_version='5.101', scope=scope)
 
     try:
         vk_session.auth(token_only=True)

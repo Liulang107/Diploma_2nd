@@ -1,14 +1,13 @@
-from sqlalchemy import create_engine, Column, Integer, String, Date
+from sqlalchemy import create_engine, Column, Integer
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import JSONB
 import sqlalchemy.exc
 import json
 
-
 # def auth_info_bd():
 #     dbname = input('Введите имя БД, в которую хотите записать данные: ')
-#     user = input('Введите пользователся БД: ')
+#     user = input('Введите пользователя БД: ')
 #     password = input('Введите пароль пользователя БД: ')
 #     auth_unfo = f'postgresql://{user}:{password}@localhost/{dbname}'
 #     return auth_unfo
@@ -48,9 +47,9 @@ def create_models(user):
         ten_pretenders = get_10_pretenders()
         for item in ten_pretenders:
             add_pretender(id_name=item['id'],
-                       photos=item['photos'])
+                          photos=item['photos'])
 
     try:
         add_all_pretenders()
-    except sqlalchemy.exc.IntegrityError as e:
+    except sqlalchemy.exc.IntegrityError:
         print('Данные уже записаны')

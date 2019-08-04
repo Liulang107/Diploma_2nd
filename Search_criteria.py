@@ -15,7 +15,6 @@ def define_search_criteria(vk, user):
 
 
 def check_user_data(vk, info):
-
     if info[0]['sex'] == 0:
         user_input_sex = input('Введите пол пользователя, для которого подбирается пара:')
     else:
@@ -23,7 +22,8 @@ def check_user_data(vk, info):
     info[0]['sex'] = 2 if user_input_sex == 1 else 1
 
     if 'city' not in info[0]:
-        user_input_country = input('Введите двухбуквенный код страны в стандарте ISO 3166-1 alpha-2, в которой проживает пользователь, для которого подбирается пара: ')
+        user_input_country = input('Введите двухбуквенный код страны в стандарте ISO 3166-1 alpha-2, '
+                                   'в которой проживает пользователь, для которого подбирается пара: ')
         response_country = vk.database.getCountries(need_all=0, code=user_input_country)
         user_input_city = input('Введите город проживания пользователя, для которого подбирается пара: ')
         response_city = vk.database.getCities(country_id=response_country['items'][0]['id'], q=user_input_city, count=1)
