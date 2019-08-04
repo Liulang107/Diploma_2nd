@@ -5,7 +5,7 @@ from Search_criteria import define_search_criteria
 
 def search_for_pretenders(vk, info):
     response_pretender = vk.users.search(
-        count=10, fields='bdate,sex,city',
+        fields='bdate,sex,city',
         age_from=info['age_from'], age_to=info['age_to'],
         sex=info['sex'], city=info['city']
     )
@@ -32,7 +32,7 @@ def get_top_3_avatars(vk, info):
             pretender_photos['photos'].append(photo['sizes'][-1]['url'])
         pretender_list.append(pretender_photos)
     del info[0:10]
-    return json.dumps(pretender_list, ensure_ascii=False, indent=2)
+    return pretender_list
 
 
 def main():
@@ -51,12 +51,18 @@ def main():
     vk = vk_session.get_api()
 
     pretender_list = search_for_pretenders(vk, define_search_criteria(vk))
-    print(get_top_3_avatars(vk, pretender_list))
+
+    with open('10_pretenders.json', 'w') as file:
+        json.dump(get_top_3_avatars(vk, pretender_list), file, ensure_ascii=False, indent=2)
 
     while True:
         user_input_next_step = input('Введите n, чтобы продолжить поиск или q, чтобы выйти из программы: ')
         if user_input_next_step == 'n':
-            print(get_top_3_avatars(vk, pretender_list))
+            if pretender_list:
+                with open('10_pretenders.json', 'w') as file:
+                    json.dump(get_top_3_avatars(vk, pretender_list), file, ensure_ascii=False, indent=2)
+            else:
+                print('Подходящих людей больше не найдено')
         if user_input_next_step == 'q':
             break
 
