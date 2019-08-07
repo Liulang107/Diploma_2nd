@@ -40,7 +40,7 @@ def main():
     user_input_login = input('Для доступа к программе введите свой логин и пароль.\nЛогин (или номер телефона: ')
     user_input_password = input('Пароль: ')
     scope = 'photos,groups'
-    vk_session = vk.api.VkApi(login=user_input_login, password=user_input_password, api_version='5.101', scope=scope)
+    vk_session = vk_api.VkApi(login=user_input_login, password=user_input_password, api_version='5.101', scope=scope)
 
     try:
         vk_session.auth(token_only=True)
